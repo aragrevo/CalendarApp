@@ -1,13 +1,13 @@
 # React De cero a experto ( Hooks y MERN )
 
-## 20. Calendar App - Aplicación
+## 22. Calendar App - Aplicación
 
-Una pequeña aplicación hecha en React con Hooks para buscar y mostrar gifs animados.
+Una pequeña aplicación de Calendario hecha en React con Hooks. Estilos aplicados con Bulma.
 
 > Created with Vite2
 
 ```sh
-npm init @vitejs/app gif-expert-app --template react
+npm init @vitejs/app calendar-app --template react
 ```
 
 ### Styles
@@ -29,6 +29,19 @@ npm init @vitejs/app gif-expert-app --template react
 
 ```sh
 npm i wouter
+```
+
+### Icons
+
+```html
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-2/css/all.min.css"
+/>
+<link
+  rel="stylesheet"
+  href="https://unicons.iconscout.com/release/v2.1.9/css/unicons.css"
+/>
 ```
 
 ### Demo
