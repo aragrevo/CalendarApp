@@ -1,4 +1,6 @@
 import React from 'react';
+import { Link } from 'wouter';
+import calendarImg from '../../assets/images/Timeline-bro.svg';
 
 export const Navbar = () => {
   return (
@@ -8,13 +10,7 @@ export const Navbar = () => {
       aria-label='main navigation'
     >
       <div className='navbar-brand'>
-        <a className='navbar-item' href='https://bulma.io'>
-          <img
-            src='https://bulma.io/images/bulma-logo.png'
-            width='112'
-            height='28'
-          />
-        </a>
+        <img src={calendarImg} width='60' />
 
         <a
           role='button'
