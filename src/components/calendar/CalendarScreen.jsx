@@ -1,29 +1,28 @@
 import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
 
 import { Navbar } from '../shared/Navbar';
 
-import 'react-big-calendar/lib/css/react-big-calendar.css';
-import { CalendarModal } from './CalendarModal';
-import { useDispatch } from 'react-redux';
 import { uiOpenModal } from '../../redux/actions/ui.actions';
-import { eventSetActive } from '../../redux/actions/calendar.actions';
+import {
+  eventClearActiveEvent,
+  eventDeleted,
+  eventSetActive,
+} from '../../redux/actions/calendar.actions';
+
+import { CalendarModal } from './CalendarModal';
 import { FabButton } from '../shared/FabButton';
+
+import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 const localizer = momentLocalizer(moment);
 
-const events = [
-  {
-    title: 'Cumple',
-    start: moment().toDate(),
-    end: moment().add(2, 'hours').toDate(),
-    bgcolor: '#fafafa',
-  },
-];
-
 export const CalendarScreen = () => {
   const dispatch = useDispatch();
+  const { events, activeEvent } = useSelector((state) => state.calendar);
+
   const [lastView, setLastView] = useState(
     localStorage.getItem('lastView') || 'month'
   );
@@ -38,8 +37,23 @@ export const CalendarScreen = () => {
   };
 
   const onSelectEvent = (e) => {
-    console.log(e);
     dispatch(eventSetActive(e));
+  };
+
+  const onSelectSlot = (e) => {
+    console.log(e);
+    dispatch(eventClearActiveEvent());
+    if (e.action == 'select') {
+      dispatch(uiOpenModal());
+    }
+  };
+
+  const handleNew = () => {
+    dispatch(uiOpenModal());
+  };
+
+  const handleDelete = () => {
+    dispatch(eventDeleted());
   };
 
   return (
@@ -55,8 +69,15 @@ export const CalendarScreen = () => {
         view={lastView}
         onDoubleClickEvent={onDoubleClick}
         onSelectEvent={onSelectEvent}
+        onSelectSlot={onSelectSlot}
+        selectable={true}
       />
-      <FabButton />
+      {!activeEvent && (
+        <FabButton color='success' icon='plus' handleAction={handleNew} />
+      )}
+      {activeEvent && (
+        <FabButton color='danger' icon='trash' handleAction={handleDelete} />
+      )}
       <CalendarModal />
     </div>
   );

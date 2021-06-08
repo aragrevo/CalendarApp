@@ -6,7 +6,7 @@ import '../../styles/auth.css';
 export const LoginForm = () => {
   return (
     <div className='card-content has-text-centered card-front'>
-      <div class='center-wrap'>
+      <div className='center-wrap'>
         <h4 className='pb-5 has-text-primary-light title is-3'>Log In</h4>
         <div className='content'>
           <div className='field'>

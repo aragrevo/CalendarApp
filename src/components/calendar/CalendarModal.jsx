@@ -1,24 +1,56 @@
 import React, { useEffect, useState } from 'react';
-import bulmaCalendar from 'bulma-calendar/dist/js/bulma-calendar.min';
-import 'bulma-calendar/dist/css/bulma-calendar.min.css';
-import moment from 'moment';
 import { useDispatch } from 'react-redux';
-import { uiCloseModal, uiOpenModal } from '../../redux/actions/ui.actions';
+import { useSelector } from 'react-redux';
+import moment from 'moment';
+
+import { uiCloseModal } from '../../redux/actions/ui.actions';
+import {
+  eventAddNew,
+  eventClearActiveEvent,
+  eventUpdated,
+} from '../../redux/actions/calendar.actions';
+
+import 'bulma-calendar/dist/css/bulma-calendar.min.css';
+import bulmaCalendar from 'bulma-calendar/dist/js/bulma-calendar.min';
 
 const initialValidate = { title: true, date: true, dates: true };
+const initEvent = {
+  title: '',
+  notes: '',
+  start: '',
+  end: '',
+};
 
+//TODO set hours on select
 export const CalendarModal = () => {
   const dispatch = useDispatch();
-  const [formValid, setFormValid] = useState(initialValidate);
-  const [formValues, setFormValues] = useState({
-    title: '',
-    notes: '',
-    date: '',
-  });
+  const { activeEvent } = useSelector((state) => state.calendar);
 
-  const { notes, title, date } = formValues;
+  const [formValid, setFormValid] = useState(initialValidate);
+  const [formValues, setFormValues] = useState(initEvent);
+
+  const { notes, title, start, end } = formValues;
+
+  // useEffect(() => {
+  //   const calendars = bulmaCalendar.attach('[type="date"]', {
+  //     isRange: true,
+  //     allowSameDayRange: true,
+  //     displayMode: 'dialog',
+  //     type: 'datetime',
+  //     labelFrom: 'Start Date',
+  //     labelTo: 'End Date',
+  //     onValidate: handleValidate,
+  //     startDate: start || '',
+  //     endDate: end || '',
+  //   });
+  // }, []);
 
   useEffect(() => {
+    if (activeEvent) {
+      setFormValues(activeEvent);
+    } else {
+      setFormValues(initEvent);
+    }
     const calendars = bulmaCalendar.attach('[type="date"]', {
       isRange: true,
       allowSameDayRange: true,
@@ -27,21 +59,23 @@ export const CalendarModal = () => {
       labelFrom: 'Start Date',
       labelTo: 'End Date',
       onValidate: handleValidate,
-      startDate: date.start || '',
-      endDate: date.end || '',
+      startDate: start || '',
+      endDate: end || '',
     });
-  }, []);
+  }, [activeEvent, setFormValues]);
 
   const handleClose = () => {
     dispatch(uiCloseModal());
+    dispatch(eventClearActiveEvent());
+    setFormValues(initEvent);
   };
 
   const handleValidate = ({ data }) => {
     const { start, end } = data.datePicker.date;
-    console.log(start, end);
     setFormValues((fv) => ({
       ...fv,
-      date: data.datePicker.date,
+      start,
+      end,
     }));
     data.save();
   };
@@ -56,12 +90,12 @@ export const CalendarModal = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     setFormValid(initialValidate);
-    if (!date || !date.start || !date.end) {
+    if (!start || !end) {
       return setFormValid((valid) => ({ ...valid, date: false }));
     }
 
-    const momentStart = moment(date.start);
-    const momentEnd = moment(date.end);
+    const momentStart = moment(start);
+    const momentEnd = moment(end);
 
     if (momentStart.isSameOrAfter(momentEnd)) {
       return setFormValid((valid) => ({ ...valid, dates: false }));
@@ -70,6 +104,24 @@ export const CalendarModal = () => {
     if (title.trim().length < 2) {
       return setFormValid((valid) => ({ ...valid, title: false }));
     }
+    dispatch(uiCloseModal());
+
+    if (activeEvent) {
+      dispatch(
+        eventUpdated({
+          ...activeEvent,
+          ...formValues,
+        })
+      );
+      return;
+    }
+
+    dispatch(
+      eventAddNew({
+        ...formValues,
+        id: new Date().getTime(),
+      })
+    );
   };
 
   return (
@@ -77,7 +129,7 @@ export const CalendarModal = () => {
       <div className='modal-background'></div>
       <div className='modal-content'>
         <form className='box' onSubmit={handleSubmit}>
-          <p className='title'>New Event</p>
+          <p className='title'>{activeEvent ? 'Edit Event' : 'New Event'}</p>
           <div className='field'>
             <label className='label'>Range</label>
             <div className='control'>

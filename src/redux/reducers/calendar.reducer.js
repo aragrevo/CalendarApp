@@ -30,28 +30,27 @@ export const calendarReducer = (state = initialState, action) => {
         ...state,
         events: [...state.events, action.payload],
       };
-    // case types.eventClearActiveEvent:
-    //     return {
-    //         ...state,
-    //         activeEvent: null
-    //     }
 
-    // case types.eventUpdated:
-    //     return {
-    //         ...state,
-    //         events: state.events.map(
-    //             e => ( e.id === action.payload.id ) ? action.payload : e
-    //         )
-    //     }
+    case types.eventClearActiveEvent:
+      return {
+        ...state,
+        activeEvent: null,
+      };
 
-    // case types.eventDeleted:
-    //     return {
-    //         ...state,
-    //         events: state.events.filter(
-    //             e => ( e.id !== state.activeEvent.id )
-    //         ),
-    //         activeEvent: null
-    //     }
+    case types.eventUpdated:
+      return {
+        ...state,
+        events: state.events.map((e) =>
+          e.id === action.payload.id ? action.payload : e
+        ),
+      };
+
+    case types.eventDeleted:
+      return {
+        ...state,
+        events: state.events.filter((e) => e.id !== state.activeEvent.id),
+        activeEvent: null,
+      };
 
     // case types.eventLoaded:
     //     return {
