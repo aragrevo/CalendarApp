@@ -6,6 +6,8 @@ import { Navbar } from '../shared/Navbar';
 
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { CalendarModal } from './CalendarModal';
+import { useDispatch } from 'react-redux';
+import { uiOpenModal } from '../../redux/actions/ui.actions';
 
 const localizer = momentLocalizer(moment);
 
@@ -19,6 +21,7 @@ const events = [
 ];
 
 export const CalendarScreen = () => {
+  const dispatch = useDispatch();
   const [lastView, setLastView] = useState(
     localStorage.getItem('lastView') || 'month'
   );
@@ -29,8 +32,7 @@ export const CalendarScreen = () => {
   };
 
   const onDoubleClick = (e) => {
-    document.querySelector('#root').classList.add('is-clipped');
-    document.querySelector('#modal').classList.add('is-active');
+    dispatch(uiOpenModal());
   };
 
   return (

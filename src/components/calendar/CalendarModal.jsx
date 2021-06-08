@@ -2,10 +2,13 @@ import React, { useEffect, useState } from 'react';
 import bulmaCalendar from 'bulma-calendar/dist/js/bulma-calendar.min';
 import 'bulma-calendar/dist/css/bulma-calendar.min.css';
 import moment from 'moment';
+import { useDispatch } from 'react-redux';
+import { uiCloseModal, uiOpenModal } from '../../redux/actions/ui.actions';
 
 const initialValidate = { title: true, date: true, dates: true };
 
 export const CalendarModal = () => {
+  const dispatch = useDispatch();
   const [formValid, setFormValid] = useState(initialValidate);
   const [formValues, setFormValues] = useState({
     title: '',
@@ -30,8 +33,7 @@ export const CalendarModal = () => {
   }, []);
 
   const handleClose = () => {
-    document.querySelector('#root').classList.remove('is-clipped');
-    document.querySelector('#modal').classList.remove('is-active');
+    dispatch(uiCloseModal());
   };
 
   const handleValidate = ({ data }) => {
@@ -53,7 +55,6 @@ export const CalendarModal = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formValues);
     setFormValid(initialValidate);
     if (!date || !date.start || !date.end) {
       return setFormValid((valid) => ({ ...valid, date: false }));
