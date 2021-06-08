@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'wouter';
 
 import '../../styles/auth.css';
 
@@ -29,7 +30,9 @@ export const LoginForm = () => {
           </div>
           <div className='field'>
             <p className='control'>
-              <button className='button is-success is-medium'>Submit</button>
+              <Link className='button is-success is-medium' to='/'>
+                Submit
+              </Link>
             </p>
           </div>
         </div>

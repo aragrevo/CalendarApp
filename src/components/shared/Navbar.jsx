@@ -40,12 +40,11 @@ export const Navbar = () => {
         <div className='navbar-end'>
           <div className='navbar-item'>
             <div className='buttons'>
-              <a className='button is-primary'>
-                <strong>Log out</strong>
-              </a>
-              {/* <a className="button is-light">
-            Log in
-          </a> */}
+              <div className='button is-success is-outlined'>
+                <Link to='/login'>
+                  <strong>Log out</strong>
+                </Link>
+              </div>
             </div>
           </div>
         </div>

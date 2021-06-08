@@ -8,6 +8,8 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { CalendarModal } from './CalendarModal';
 import { useDispatch } from 'react-redux';
 import { uiOpenModal } from '../../redux/actions/ui.actions';
+import { eventSetActive } from '../../redux/actions/calendar.actions';
+import { FabButton } from '../shared/FabButton';
 
 const localizer = momentLocalizer(moment);
 
@@ -31,8 +33,13 @@ export const CalendarScreen = () => {
     localStorage.setItem('lastView', e);
   };
 
-  const onDoubleClick = (e) => {
+  const onDoubleClick = () => {
     dispatch(uiOpenModal());
+  };
+
+  const onSelectEvent = (e) => {
+    console.log(e);
+    dispatch(eventSetActive(e));
   };
 
   return (
@@ -43,11 +50,13 @@ export const CalendarScreen = () => {
         events={events}
         startAccessor='start'
         endAccessor='end'
-        style={{ height: '90vh' }}
+        style={{ height: '85vh' }}
         onView={onViewChange}
         view={lastView}
         onDoubleClickEvent={onDoubleClick}
+        onSelectEvent={onSelectEvent}
       />
+      <FabButton />
       <CalendarModal />
     </div>
   );
