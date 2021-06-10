@@ -3,7 +3,7 @@ import React from 'react';
 export const RegisterForm = () => {
   return (
     <div className='card-content has-text-centered card-back'>
-      <div class='center-wrap'>
+      <div className='center-wrap'>
         <h4 className='pb-5 has-text-primary-light title is-3'>Sign Up</h4>
         <div className='content'>
           <div className='field'>
