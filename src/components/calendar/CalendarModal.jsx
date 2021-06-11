@@ -5,9 +5,9 @@ import moment from 'moment';
 
 import { uiCloseModal } from '../../redux/actions/ui.actions';
 import {
-  eventAddNew,
   eventClearActiveEvent,
-  eventUpdated,
+  eventStartAddNew,
+  eventStartUpdate,
 } from '../../redux/actions/calendar.actions';
 
 import 'bulma-calendar/dist/css/bulma-calendar.min.css';
@@ -107,21 +107,11 @@ export const CalendarModal = () => {
     dispatch(uiCloseModal());
 
     if (activeEvent) {
-      dispatch(
-        eventUpdated({
-          ...activeEvent,
-          ...formValues,
-        })
-      );
+      dispatch(eventStartUpdate(formValues));
       return;
     }
 
-    dispatch(
-      eventAddNew({
-        ...formValues,
-        id: new Date().getTime(),
-      })
-    );
+    dispatch(eventStartAddNew(formValues));
   };
 
   return (

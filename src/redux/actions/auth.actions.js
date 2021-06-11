@@ -1,8 +1,8 @@
 import { toast } from 'bulma-toast';
-// import { eventLogout } from './events';
 
 import { fetchWithoutToken, fetchWithToken } from '../../helpers/fetch';
 import { types } from '../types/types';
+import { eventLogout } from './calendar.actions';
 
 export const startLogin = (email, password) => {
   return async (dispatch) => {
@@ -96,7 +96,7 @@ const login = (user) => ({
 export const startLogout = () => {
   return (dispatch) => {
     localStorage.clear();
-    // dispatch( eventLogout() );
+    dispatch(eventLogout());
     dispatch(logout());
   };
 };

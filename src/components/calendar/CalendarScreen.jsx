@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
@@ -8,8 +8,9 @@ import { Navbar } from '../shared/Navbar';
 import { uiOpenModal } from '../../redux/actions/ui.actions';
 import {
   eventClearActiveEvent,
-  eventDeleted,
   eventSetActive,
+  eventStartDelete,
+  eventStartLoading,
 } from '../../redux/actions/calendar.actions';
 
 import { CalendarModal } from './CalendarModal';
@@ -26,6 +27,10 @@ export const CalendarScreen = () => {
   const [lastView, setLastView] = useState(
     localStorage.getItem('lastView') || 'month'
   );
+
+  useEffect(() => {
+    dispatch(eventStartLoading());
+  }, [dispatch]);
 
   const onViewChange = (e) => {
     setLastView(e);
@@ -53,7 +58,7 @@ export const CalendarScreen = () => {
   };
 
   const handleDelete = () => {
-    dispatch(eventDeleted());
+    dispatch(eventStartDelete());
   };
 
   return (

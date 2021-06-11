@@ -1,15 +1,3 @@
-// {
-//     id: 'askdjhaksdjas',
-//     title: 'Cumpleaños del jefe',
-//     start: moment().toDate(),
-//     end: moment().add( 2, 'hours' ).toDate(),
-//     notes: 'Comprar el pastel',
-//     user: {
-//         _id: '123',
-//         name: 'Fernando'
-//     }
-// }
-
 import { types } from '../types/types';
 
 const initialState = {
@@ -52,16 +40,16 @@ export const calendarReducer = (state = initialState, action) => {
         activeEvent: null,
       };
 
-    // case types.eventLoaded:
-    //     return {
-    //         ...state,
-    //         events: [ ...action.payload ]
-    //     }
+    case types.eventLoaded:
+      return {
+        ...state,
+        events: [...action.payload],
+      };
 
-    // case types.eventLogout:
-    //     return {
-    //         ...initialState
-    //     }
+    case types.eventLogout:
+      return {
+        ...initialState,
+      };
 
     default:
       return state;
