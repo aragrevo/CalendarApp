@@ -95,7 +95,8 @@ const login = (user) => ({
 
 export const startLogout = () => {
   return (dispatch) => {
-    localStorage.clear();
+    localStorage.removeItem('token');
+    localStorage.removeItem('token-init-date');
     dispatch(eventLogout());
     dispatch(logout());
   };
