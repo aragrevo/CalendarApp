@@ -1,7 +1,7 @@
 import { toast } from 'bulma-toast';
 // import { eventLogout } from './events';
 
-import { fetchWithoutToken } from '../../helpers/fetch';
+import { fetchWithoutToken, fetchWithToken } from '../../helpers/fetch';
 import { types } from '../types/types';
 
 export const startLogin = (email, password) => {
@@ -9,7 +9,6 @@ export const startLogin = (email, password) => {
     const resp = await fetchWithoutToken('auth', { email, password }, 'POST');
     const body = await resp.json();
 
-    console.log(body);
     if (!body.ok) {
       return toast({
         message: body.msg,
@@ -34,61 +33,72 @@ export const startLogin = (email, password) => {
   };
 };
 
-// export const startRegister = ( email, password, name ) => {
-//     return async( dispatch ) => {
+export const startRegister = ({ email, password, name }) => {
+  return async (dispatch) => {
+    const resp = await fetchWithoutToken(
+      'auth/new',
+      { email, password, name },
+      'POST'
+    );
+    const body = await resp.json();
 
-//         const resp = await fetchSinToken( 'auth/new', { email, password, name }, 'POST' );
-//         const body = await resp.json();
+    if (!body.ok) {
+      return toast({
+        message: body.msg,
+        type: 'is-danger',
+        position: 'center',
+        closeOnClick: true,
+        dismissible: true,
+        pauseOnHover: true,
+      });
+    }
 
-//         if( body.ok ) {
-//             localStorage.setItem('token', body.token );
-//             localStorage.setItem('token-init-date', new Date().getTime() );
+    localStorage.setItem('token', body.token);
+    localStorage.setItem('token-init-date', new Date().getTime());
 
-//             dispatch( login({
-//                 uid: body.uid,
-//                 name: body.name
-//             }) )
-//         } else {
-//             Swal.fire('Error', body.msg, 'error');
-//         }
+    dispatch(
+      login({
+        uid: body.uid,
+        name: body.name,
+      })
+    );
+  };
+};
 
-//     }
-// }
+export const startChecking = () => {
+  return async (dispatch) => {
+    const resp = await fetchWithToken('auth/renew');
+    const body = await resp.json();
 
-// export const startChecking = () => {
-//     return async(dispatch) => {
+    if (!body.ok) {
+      dispatch(checkingFinish());
+      return;
+    }
+    localStorage.setItem('token', body.token);
+    localStorage.setItem('token-init-date', new Date().getTime());
 
-//         const resp = await fetchConToken( 'auth/renew' );
-//         const body = await resp.json();
+    dispatch(
+      login({
+        uid: body.uid,
+        name: body.name,
+      })
+    );
+  };
+};
 
-//         if( body.ok ) {
-//             localStorage.setItem('token', body.token );
-//             localStorage.setItem('token-init-date', new Date().getTime() );
-
-//             dispatch( login({
-//                 uid: body.uid,
-//                 name: body.name
-//             }) )
-//         } else {
-//             dispatch( checkingFinish() );
-//         }
-//     }
-// }
-
-// const checkingFinish = () => ({ type: types.authCheckingFinish });
+const checkingFinish = () => ({ type: types.authCheckingFinish });
 
 const login = (user) => ({
   type: types.authLogin,
   payload: user,
 });
 
-// export const startLogout = () => {
-//     return ( dispatch ) => {
+export const startLogout = () => {
+  return (dispatch) => {
+    localStorage.clear();
+    // dispatch( eventLogout() );
+    dispatch(logout());
+  };
+};
 
-//         localStorage.clear();
-//         dispatch( eventLogout() );
-//         dispatch( logout() );
-//     }
-// }
-
-// const logout = () => ({ type: types.authLogout })
+const logout = () => ({ type: types.authLogout });

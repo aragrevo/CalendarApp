@@ -1,8 +1,17 @@
 import React from 'react';
-import { Link } from 'wouter';
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import calendarImg from '../../assets/images/Timeline-bro.svg';
+import { startLogout } from '../../redux/actions/auth.actions';
 
 export const Navbar = () => {
+  const { name } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+
+  const handleLogout = () => {
+    dispatch(startLogout());
+  };
+
   return (
     <nav
       className='navbar is-dark'
@@ -28,23 +37,18 @@ export const Navbar = () => {
 
       <div id='navbarBasicExample' className='navbar-menu'>
         <div className='navbar-start'>
-          <a className='navbar-item' href='#'>
-            Home
-          </a>
-
-          {/* <a className="navbar-item" href="#">
-        Documentation
-      </a> */}
+          <span className='navbar-item'>{name}</span>
         </div>
 
         <div className='navbar-end'>
           <div className='navbar-item'>
             <div className='buttons'>
-              <div className='button is-success is-outlined'>
-                <Link to='/login'>
-                  <strong>Log out</strong>
-                </Link>
-              </div>
+              <button
+                className='button is-success is-outlined'
+                onClick={handleLogout}
+              >
+                <strong>Log out</strong>
+              </button>
             </div>
           </div>
         </div>
