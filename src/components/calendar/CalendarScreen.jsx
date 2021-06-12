@@ -17,6 +17,7 @@ import { CalendarModal } from './CalendarModal';
 import { FabButton } from '../shared/FabButton';
 
 import 'react-big-calendar/lib/css/react-big-calendar.css';
+import { CalendarEvent } from './CalendarEvent';
 
 const localizer = momentLocalizer(moment);
 
@@ -74,6 +75,7 @@ export const CalendarScreen = () => {
         events={events}
         startAccessor='start'
         endAccessor='end'
+        min={new Date(2020, 10, 0, 4, 0, 0)}
         style={{ height: '85vh' }}
         onView={onViewChange}
         view={lastView}
@@ -81,6 +83,9 @@ export const CalendarScreen = () => {
         onSelectEvent={onSelectEvent}
         onSelectSlot={onSelectSlot}
         selectable={true}
+        components={{
+          event: CalendarEvent,
+        }}
       />
       {!activeEvent && (
         <FabButton color='success' icon='plus' handleAction={handleNew} />

@@ -12,6 +12,7 @@ export const DateTimePicker = ({ start, end, validate }) => {
       type: 'datetime',
       labelFrom: 'Start Date',
       labelTo: 'End Date',
+      minuteSteps: '1',
       onValidate: validate,
     });
   };
