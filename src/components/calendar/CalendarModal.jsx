@@ -10,8 +10,7 @@ import {
   eventStartUpdate,
 } from '../../redux/actions/calendar.actions';
 
-import 'bulma-calendar/dist/css/bulma-calendar.min.css';
-import bulmaCalendar from 'bulma-calendar/dist/js/bulma-calendar.min';
+import { DateTimePicker } from '../shared/DateTimePicker';
 
 const initialValidate = { title: true, date: true, dates: true };
 const initEvent = {
@@ -21,7 +20,6 @@ const initEvent = {
   end: '',
 };
 
-//TODO set hours on select
 export const CalendarModal = () => {
   const dispatch = useDispatch();
   const { activeEvent } = useSelector((state) => state.calendar);
@@ -31,37 +29,12 @@ export const CalendarModal = () => {
 
   const { notes, title, start, end } = formValues;
 
-  // useEffect(() => {
-  //   const calendars = bulmaCalendar.attach('[type="date"]', {
-  //     isRange: true,
-  //     allowSameDayRange: true,
-  //     displayMode: 'dialog',
-  //     type: 'datetime',
-  //     labelFrom: 'Start Date',
-  //     labelTo: 'End Date',
-  //     onValidate: handleValidate,
-  //     startDate: start || '',
-  //     endDate: end || '',
-  //   });
-  // }, []);
-
   useEffect(() => {
     if (activeEvent) {
       setFormValues(activeEvent);
     } else {
       setFormValues(initEvent);
     }
-    const calendars = bulmaCalendar.attach('[type="date"]', {
-      isRange: true,
-      allowSameDayRange: true,
-      displayMode: 'dialog',
-      type: 'datetime',
-      labelFrom: 'Start Date',
-      labelTo: 'End Date',
-      onValidate: handleValidate,
-      startDate: start || '',
-      endDate: end || '',
-    });
   }, [activeEvent, setFormValues]);
 
   const handleClose = () => {
@@ -106,7 +79,7 @@ export const CalendarModal = () => {
     }
     dispatch(uiCloseModal());
 
-    if (activeEvent) {
+    if (activeEvent.id) {
       dispatch(eventStartUpdate(formValues));
       return;
     }
@@ -121,10 +94,7 @@ export const CalendarModal = () => {
         <form className='box' onSubmit={handleSubmit}>
           <p className='title'>{activeEvent ? 'Edit Event' : 'New Event'}</p>
           <div className='field'>
-            <label className='label'>Range</label>
-            <div className='control'>
-              <input id='dob' type='date' />
-            </div>
+            <DateTimePicker start={start} end={end} validate={handleValidate} />
             {!formValid.date && (
               <p className='help is-danger'>The date is required</p>
             )}

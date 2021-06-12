@@ -49,6 +49,11 @@ export const CalendarScreen = () => {
     console.log(e);
     dispatch(eventClearActiveEvent());
     if (e.action == 'select') {
+      const event = {
+        start: e.start,
+        end: e.end,
+      };
+      dispatch(eventSetActive(event));
       dispatch(uiOpenModal());
     }
   };
